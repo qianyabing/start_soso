@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多引擎搜索+可拖拽排序常用网址</title>
+	<link rel="icon" href="https://cdn-icons-png.flaticon.com/16/599/599305.png" type="image/png">
+    <style>
+        /* 原有样式全部保留，新增拖拽相关样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "PingFang SC", "Microsoft Yahei", sans-serif;
+        }
+
+        body {
+            background: url("https://picsum.photos/1920/1080") no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 120px;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.15);
+            z-index: -1;
+        }
+
+        .nav {
+            margin-bottom: 18px;
+            display: flex;
+            gap: 28px;
+            color: #fff;
+            font-size: 17px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .nav-item {
+            cursor: pointer;
+            padding: 6px 0;
+            position: relative;
+        }
+
+        .nav-item.active::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 2px;
+            background: #ffd700;
+        }
+
+        .search-container {
+            position: relative;
+            width: 680px;
+            max-width: 92%;
+            margin-bottom: 200px;
+        }
+
+        #search-input {
+            width: 100%;
+            height: 52px;
+            padding: 0 55px 0 22px;
+            border: none;
+            border-radius: 26px;
+            font-size: 16px;
+            outline: none;
+            background: rgba(255, 255, 255, 0.92);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            letter-spacing: 0.5px;
+        }
+
+        #search-input::placeholder {
+            color: #999;
+            font-size: 15px;
+        }
+
+        #search-btn {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'%3E%3C/circle%3E%3Cline x1='18' y1='18' x2='13.65' y2='13.65'%3E%3C/line%3E%3C/svg%3E") no-repeat center;
+            cursor: pointer;
+            background-size: 20px;
+            transition: all 0.2s;
+        }
+
+        #search-btn:hover {
+            background-size: 22px;
+            opacity: 0.9;
+        }
+
+        .engine-select {
+            position: absolute;
+            left: 22px;
+            bottom: -8px;
+            transform: translateY(100%);
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .engine-item {
+            font-size: 14px;
+            color: #fff;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .engine-item:hover {
+            background: rgba(255, 255, 255, 0.18);
+            transform: translateY(-1px);
+        }
+
+        .engine-item.active {
+            background: #ffd700;
+            color: #333;
+            text-shadow: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .common-sites {
+            width: 680px;
+            max-width: 92%;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 50px;
+        }
+
+        .sites-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .sites-title {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .add-site-btn {
+            padding: 6px 12px;
+            background: #4096ff;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .add-site-btn:hover {
+            background: #3385ff;
+        }
+
+        .sites-list {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 20px 10px;
+        }
+
+        /* ========== 新增拖拽相关样式 ========== */
+        .site-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: grab; /* 拖拽光标 */
+            padding: 8px 0;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            position: relative;
+            user-select: none; /* 禁止选中文本 */
+        }
+
+        .site-item:active {
+            cursor: grabbing; /* 拖拽中光标 */
+        }
+
+        .site-item:hover {
+            background: rgba(0, 0, 0, 0.03);
+            transform: translateY(-1px);
+        }
+
+        /* 拖拽悬停时的高亮样式 */
+        .site-item.drag-over {
+            background: rgba(64, 150, 255, 0.1);
+            border: 1px dashed #4096ff;
+        }
+
+        .site-delete {
+            position: absolute;
+            top: -4px;
+            right: 0;
+            width: 16px;
+            height: 16px;
+            background: #ff4d4f;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+
+        .site-item:hover .site-delete {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .site-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: #f5f7fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            font-size: 18px;
+            color: #4096ff;
+        }
+
+        .site-name {
+            font-size: 12px;
+            color: #475569;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .sites-empty {
+            padding: 40px 0;
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+            display: none;
+        }
+
+        .sites-empty i {
+            font-size: 32px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .modal-mask {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.2s ease;
+        }
+
+        .modal-mask.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-box {
+            width: 90%;
+            max-width: 400px;
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            transform: translateY(-20px);
+            transition: all 0.2s ease;
+        }
+
+        .modal-mask.show .modal-box {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .modal-close {
+            width: 24px;
+            height: 24px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: #999;
+        }
+
+        .modal-close:hover {
+            color: #333;
+        }
+
+        .modal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .modal-form label {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .modal-form input {
+            padding: 10px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .modal-form input:focus {
+            border-color: #4096ff;
+        }
+
+        .modal-btns {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 16px;
+        }
+
+        .modal-cancel {
+            padding: 8px 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            background: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .modal-cancel:hover {
+            background: #f5f7fa;
+        }
+
+        .modal-confirm {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            background: #4096ff;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .modal-confirm:hover {
+            background: #3385ff;
+        }
+
+        @media (max-width: 768px) {
+            .search-container, .common-sites {
+                width: 92%;
+            }
+            .nav {
+                gap: 18px;
+                font-size: 15px;
+            }
+            .engine-select {
+                gap: 12px;
+                flex-wrap: wrap;
+                bottom: -12px;
+            }
+            .engine-item {
+                font-size: 13px;
+                padding: 3px 7px;
+            }
+            #search-input {
+                height: 48px;
+                font-size: 15px;
+            }
+            .sites-list {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 15px 8px;
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-3px); }
+            40%, 80% { transform: translateX(3px); }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 原有HTML结构不变 -->
+    <div class="nav">
+        <div class="nav-item active">搜索</div>
+        <div class="nav-item">影视</div>
+        <div class="nav-item">音频</div>
+        <div class="nav-item">社区</div>
+        <div class="nav-item">购物</div>
+        <div class="nav-item">生活</div>
+    </div>
+
+    <div class="search-container">
+        <input type="text" id="search-input" placeholder="输入搜索内容，按回车即可搜索">
+        <button id="search-btn"></button>
+        <div class="engine-select">
+            <div class="engine-item active" data-engine="sogou">搜狗</div>
+            <div class="engine-item" data-engine="baidu">百度</div>
+            <div class="engine-item" data-engine="bing">Bing</div>
+            <div class="engine-item" data-engine="google">Google</div>
+            <div class="engine-item" data-engine="yandex">Yandex</div>
+            <div class="engine-item" data-engine="360">360</div>
+            <div class="engine-item" data-engine="weixin">微信</div>
+            <div class="engine-item" data-engine="zhihu">知乎</div>
+            <div class="engine-item" data-engine="xiaohongshu">小红书</div>
+            <div class="engine-item" data-engine="bilibili">B站</div>
+        </div>
+    </div>
+
+    <div class="common-sites">
+        <div class="sites-header">
+            <div class="sites-title">常用网址</div>
+            <button class="add-site-btn">
+                <i class="fas fa-plus"></i>
+                <span>添加网址</span>
+            </button>
+        </div>
+        <div class="sites-list" id="sitesList"></div>
+        <div class="sites-empty" id="sitesEmpty">
+            <i class="fas fa-link"></i>
+            <p>暂无常用网址，点击添加按钮开始添加吧</p>
+        </div>
+    </div>
+
+    <div class="modal-mask" id="siteModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <span>添加常用网址</span>
+                <button class="modal-close" id="modalClose">×</button>
+            </div>
+            <form class="modal-form" id="siteForm">
+                <label for="siteName">网站名称</label>
+                <input type="text" id="siteName" placeholder="例如：百度" required>
+                <label for="siteLink">网站链接</label>
+                <input type="url" id="siteLink" placeholder="https://www.baidu.com" required>
+            </form>
+            <div class="modal-btns">
+                <button class="modal-cancel" id="modalCancel">取消</button>
+                <button class="modal-confirm" id="modalConfirm">确认添加</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===================== 持久化基础函数（保留） =====================
+        function getSitesFromStorage() {
+            const sitesStr = localStorage.getItem('common_sites');
+            const defaultSites = [
+                { name: '百度', link: 'https://www.baidu.com', icon: 'search' },
+                { name: '淘宝', link: 'https://www.taobao.com', icon: 'shopping-cart' },
+                { name: '京东', link: 'https://www.jd.com', icon: 'box' },
+                { name: '知乎', link: 'https://www.zhihu.com', icon: 'comment-dots' },
+                { name: '哔哩哔哩', link: 'https://www.bilibili.com', icon: 'video' },
+                { name: 'QQ邮箱', link: 'https://mail.qq.com', icon: 'envelope' },
+                { name: '百度地图', link: 'https://map.baidu.com', icon: 'map-marker-alt' },
+                { name: '网易', link: 'https://www.163.com', icon: 'newspaper' }
+            ];
+            return sitesStr ? JSON.parse(sitesStr) : defaultSites;
+        }
+
+        function saveSitesToStorage(sites) {
+            localStorage.setItem('common_sites', JSON.stringify(sites));
+        }
+
+        // ===================== 新增：拖拽排序核心逻辑 =====================
+        let dragSrcIndex = -1; // 拖拽源项的索引
+
+        // 初始化拖拽事件（给每个网址项绑定拖拽相关事件）
+        function initDragEvents() {
+            const siteItems = document.querySelectorAll('.site-item');
+            siteItems.forEach((item, index) => {
+                // 标记拖拽项的索引
+                item.dataset.index = index;
+                // 设置可拖拽
+                item.draggable = true;
+
+                // 1. 开始拖拽
+                item.addEventListener('dragstart', (e) => {
+                    dragSrcIndex = index;
+                    e.dataTransfer.effectAllowed = 'move';
+                    // 添加拖拽样式（可选）
+                    item.style.opacity = '0.5';
+                    item.style.transform = 'scale(1.05)';
+                });
+
+                // 2. 拖拽结束（重置样式）
+                item.addEventListener('dragend', () => {
+                    item.style.opacity = '1';
+                    item.style.transform = 'none';
+                    // 移除所有拖拽悬停样式
+                    document.querySelectorAll('.site-item').forEach(i => {
+                        i.classList.remove('drag-over');
+                    });
+                });
+
+                // 3. 拖拽经过（阻止默认行为，否则drop不触发）
+                item.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                    // 添加悬停高亮样式
+                    if (e.target.closest('.site-item') !== item) return;
+                    item.classList.add('drag-over');
+                });
+
+                // 4. 拖拽离开（移除高亮）
+                item.addEventListener('dragleave', () => {
+                    item.classList.remove('drag-over');
+                });
+
+                // 5. 放下（核心：重新排序）
+                item.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const dropTargetIndex = parseInt(item.dataset.index);
+                    // 如果拖拽源和目标是同一个，不处理
+                    if (dragSrcIndex === dropTargetIndex) return;
+
+                    // 读取当前数据
+                    let sites = getSitesFromStorage();
+                    // 移除源项并插入到目标位置
+                    const draggedItem = sites.splice(dragSrcIndex, 1)[0];
+                    sites.splice(dropTargetIndex, 0, draggedItem);
+                    // 保存新顺序并重新渲染
+                    saveSitesToStorage(sites);
+                    renderSitesList();
+                    // 重置样式
+                    item.classList.remove('drag-over');
+                });
+            });
+        }
+
+        // ===================== 渲染列表（补充拖拽初始化） =====================
+        function renderSitesList() {
+            const sites = getSitesFromStorage();
+            const sitesList = document.getElementById('sitesList');
+            sitesList.innerHTML = '';
+
+            sites.forEach((site, index) => {
+                const newSite = document.createElement('div');
+                newSite.className = 'site-item';
+                newSite.dataset.link = site.link;
+                newSite.dataset.index = index; // 标记索引
+                newSite.draggable = true; // 开启拖拽
+                newSite.innerHTML = `
+                    <span class="site-delete"><i class="fas fa-times"></i></span>
+                    <div class="site-icon">
+                        <i class="fas fa-${site.icon}"></i>
+                    </div>
+                    <div class="site-name">${site.name}</div>
+                `;
+
+                // 删除事件（保留）
+                newSite.querySelector('.site-delete').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    deleteSite(site.link);
+                });
+
+                // 跳转事件（保留）
+                newSite.addEventListener('click', () => {
+                    window.open(site.link, '_blank');
+                });
+
+                sitesList.appendChild(newSite);
+            });
+
+            // 渲染后初始化拖拽事件
+            initDragEvents();
+            checkEmptyState();
+        }
+
+        // ===================== 其他基础函数（保留） =====================
+        function addSiteToStorage(name, link) {
+            const sites = getSitesFromStorage();
+            const iconPool = ['search', 'shopping-cart', 'box', 'comment-dots', 'video', 'envelope', 'map-marker-alt', 'newspaper', 'globe', 'link'];
+            const randomIcon = iconPool[Math.floor(Math.random() * iconPool.length)];
+            const isDuplicate = sites.some(s => s.link === link);
+            if (isDuplicate) {
+                alert('该网址已添加过！');
+                return false;
+            }
+            sites.push({ name, link, icon: randomIcon });
+            saveSitesToStorage(sites);
+            return true;
+        }
+
+        function deleteSite(link) {
+            let sites = getSitesFromStorage();
+            sites = sites.filter(s => s.link !== link);
+            saveSitesToStorage(sites);
+            renderSitesList();
+        }
+
+        function checkEmptyState() {
+            const sites = getSitesFromStorage();
+            const sitesList = document.getElementById('sitesList');
+            const sitesEmpty = document.getElementById('sitesEmpty');
+            if (sites.length === 0) {
+                sitesList.style.display = 'none';
+                sitesEmpty.style.display = 'block';
+            } else {
+                sitesList.style.display = 'grid';
+                sitesEmpty.style.display = 'none';
+            }
+        }
+
+        // ===================== 搜索功能（保留） =====================
+        let currentEngine = 'sogou';
+        const engineConfig = {
+            baidu: 'https://www.baidu.com/s?wd={keyword}',
+            google: 'https://www.google.com/search?q={keyword}',
+            yandex: 'https://yandex.com/search/?text={keyword}',
+            bing: 'https://cn.bing.com/search?q={keyword}',
+            360: 'https://www.so.com/s?q={keyword}',
+            sogou: 'https://www.sogou.com/web?query={keyword}',
+            weixin: 'https://weixin.sogou.com/weixin?type=2&query={keyword}',
+            zhihu: 'https://www.zhihu.com/search?q={keyword}',
+            xiaohongshu: 'https://www.xiaohongshu.com/search_result?keyword={keyword}',
+            bilibili: 'https://search.bilibili.com/all?keyword={keyword}'
+        };
+
+        const engineItems = document.querySelectorAll('.engine-item');
+        engineItems.forEach(item => {
+            item.addEventListener('click', () => {
+                engineItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                currentEngine = item.dataset.engine;
+            });
+        });
+
+        function doSearch() {
+            const rawKeyword = document.getElementById('search-input').value.trim();
+            if (!rawKeyword) {
+                const input = document.getElementById('search-input');
+                input.style.animation = 'shake 0.3s ease';
+                setTimeout(() => input.style.animation = '', 300);
+                return;
+            }
+            const keyword = encodeURIComponent(rawKeyword);
+            const searchUrl = engineConfig[currentEngine].replace('{keyword}', keyword);
+            window.open(searchUrl, '_blank');
+        }
+
+        document.getElementById('search-btn').addEventListener('click', doSearch);
+        document.getElementById('search-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') doSearch();
+        });
+
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+
+        // ===================== 初始化 + 添加网址弹窗（保留） =====================
+        window.onload = function() {
+            // 初始渲染列表
+            renderSitesList();
+
+            const addSiteBtn = document.querySelector('.add-site-btn');
+            const siteModal = document.getElementById('siteModal');
+            const modalClose = document.getElementById('modalClose');
+            const modalCancel = document.getElementById('modalCancel');
+            const modalConfirm = document.getElementById('modalConfirm');
+            const siteNameInput = document.getElementById('siteName');
+            const siteLinkInput = document.getElementById('siteLink');
+
+            addSiteBtn.addEventListener('click', () => {
+                siteModal.classList.add('show');
+                siteNameInput.value = '';
+                siteLinkInput.value = '';
+            });
+
+            function closeModal() {
+                siteModal.classList.remove('show');
+            }
+            modalClose.addEventListener('click', closeModal);
+            modalCancel.addEventListener('click', closeModal);
+            siteModal.addEventListener('click', (e) => {
+                if (e.target === siteModal) closeModal();
+            });
+
+            modalConfirm.addEventListener('click', (e) => {
+                e.preventDefault();
+                const name = siteNameInput.value.trim();
+                const link = siteLinkInput.value.trim();
+
+                if (!name || !link) {
+                    alert('请填写完整的网站名称和链接！');
+                    return;
+                }
+
+                const isSuccess = addSiteToStorage(name, link);
+                if (isSuccess) {
+                    renderSitesList(); // 重新渲染（包含拖拽初始化）
+                    closeModal();
+                }
+            });
+        };
+    </script>
+</body>
+</html>
