@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>AI_generate</title>
+	<!-- 引入Tailwind CSS -->
+	<script src="https://cdn.tailwindcss.com"></script>
+	<!-- 引入Font Awesome图标 -->
+	<link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+	<!-- 配置Tailwind自定义主题 -->
+	<script>
+		tailwind.config = {
+			theme: {
+				extend: {
+					colors: {
+						primary: '#6366f1',
+						secondary: '#8b5cf6',
+						accent: '#ec4899',
+						dark: '#1e293b',
+						light: '#f8fafc'
+					},
+					fontFamily: {
+						sans: ['Inter', 'system-ui', 'sans-serif'],
+					},
+				},
+			}
+		}
+	</script>
+
+	<!-- 自定义工具类 -->
+	<style type="text/tailwindcss">
+		@layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      /* .card-hover {
+        @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+      }
+      .gradient-bg {
+        @apply bg-gradient-to-br from-primary to-secondary;
+      } */
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 min-h-screen">
+	<!-- 顶部导航栏 -->
+	<header class="gradient-bg shadow-md sticky top-0 z-50">
+		<div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center">
+			<div class="flex items-center mb-4 md:mb-0">
+				<i class="fa fa-paint-brush text-2xl mr-3"></i>
+				<h1 class="text-2xl font-bold">AI_generate</h1>
+			</div>
+			<div class="flex items-center">
+				<p class="text-sm opacity-90">精选国内优质AI绘画工具</p>
+			</div>
+		</div>
+	</header>
+
+	<!-- 主内容区 -->
+	<main class="container mx-auto px-4 py-8">
+		<!-- 搜索框 -->
+		<div class="mb-10 max-w-2xl mx-auto">
+			<div class="relative">
+				<input type="text" id="search-input" placeholder="搜索AI绘画平台..."
+					class="w-full py-3 px-6 rounded-full shadow-md focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all">
+				<i class="fa fa-search absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+			</div>
+		</div>
+
+		<!-- 平台分类 -->
+		<!-- 字节跳动系 -->
+		<section class="mb-12">
+			<div class="flex items-center mb-6">
+				<div class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center mr-3">
+					<i class="fa fa字节跳动系 text-white"></i>
+				</div>
+				<h2 class="text-xl font-bold text-dark">字节跳动系</h2>
+			</div>
+
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+				<!-- 豆包AI绘画 -->
+				<a href="https://www.doubao.com/chat/create-image" title="https://www.doubao.com/chat/create-image"
+					target="_blank" class="bg-white rounded-xl shadow p-5 card-hover">
+					<div class="flex justify-between items-start mb-3">
+						<h3 class="font-semibold text-lg">豆包AI绘画（基础版）</h3>
+						<span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">免费无限</span>
+					</div>
+					<p class="text-gray-500 text-sm mb-3">字节跳动旗下AI绘画工具，操作简单，功能强大</p>
+					<div class="flex items-center text-primary text-sm">
+						<span>访问网站</span>
+						<i class="fa fa-arrow-right ml-2"></i>
+					</div>
+				</a>
+
+				<a href="https://www.doubao.com/chat" title="https://www.doubao.com/chat" target="_blank"
+					class="bg-white rounded-xl shadow p-5 card-hover">
+					<div class="flex justify-between items-start mb-3">
+						<h3 class="font-semibold text-lg">豆包AI绘画（超能创意版）</h3>
+						<span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">免费无限</span>
+					</div>
+					<p class="text-gray-500 text-sm mb-3">侧边栏选择"图像生成"，功能更丰富</p>
+					<div class="flex items-center text-primary text-sm">
+						<span>访问网站</span>
+						<i class="fa fa-arrow-right ml-2"></i>
+					</div>
+				</a>
+
+				<a href="https://www.volcengine.com/experience/ark" title="https://www.volcengine.com/experience/ark"
+					target="_blank" class="bg-white rounded-xl shadow p-5 card-hover">
+					<div class="flex justify-between items-start mb-3">
+						<h3 class="font-semibold text-lg">豆包AI绘画（火山引擎体验）</h3>
+						<span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">免费无限</span>
+					</div>
+					<p class="text-gray-500 text-sm mb-3">火山引擎平台上的体验版本</p>
+					<div class="flex items-center text-primary text-sm">
+						<span>访问网站</span>
+						<i class="fa fa-arrow-right ml-2"></i>
+					</div>
+				</a>
+
+				<a href="https://event1.cn/5LGO92" title="https://event1.cn/5LGO92" target="_blank"
+					class="bg-white rounded-xl shadow p-5 card-hover">
+					<div class="flex justify-between items-start mb-3">
+						<h3 class="font-semibold text-lg">豆包AI绘画（短链接）</h3>
+						<span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">免费无限</span>
+					</div>
+					<p class="text-gray-500 text-sm mb-3">Seedream 4.0体验版快速访问</p>
+					<div class="flex items-center text-primary text-sm">
+						<span>访问网站</span>
+						<i class="fa fa-arrow-right ml-2"></i>
+					</div>
+				</a>
+
+				<a href="https://jimeng.jianying.com" title="https://jimeng.jianying.com" target="_blank"
+					class="bg-white rounded-xl shadow p-5 card-hover">
+					<div class="flex justify-between items-start mb-3">
+						<h3 class="font-semibold text-lg">即梦AI（主站）</h3>
+						<span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">60次/天</span>
+					</div>
+					<p class="text-gray-500 text-sm mb-3">字节旗下专业AI创作平台</p>
+					<div class="flex items-center text-primary text-sm">
+						<span>访问网站</span>
+						<i class="fa fa-arrow-right ml-2"></i>
+					</div>
+				</a>
+
+				<a href="https://jimeng.jianying.com/ai-tool/home" title="https://jimeng.jianying.com/ai-tool/home"
+					target="_blank" class="bg-white rounded-xl shadow p-5 card-hover">
+					<div class="flex justify-between items-start mb-3">
+						<h3 class="font-semibold text-lg">即梦AI（AI工具主页）</h3>
+						<span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">60次/天</span>
+					</div>
+					<p class="text-gray-500 text-sm mb-3">即梦AI的工具集合页面</p>
+					<div class="flex items-center text-primary text-sm">
+						<span>访问网站</span>
+						<i class="fa fa-arrow-right ml-2"></i>
+					</div>
+				</a>
+
+				<a href="https://jimeng.jianying.com/s/iFQhyUSm" title="https://jimeng.jianying.com/s/iFQhyUSm"
+					target="_blank" class="bg-white rounded-xl shadow p-5 card-hover">
+					<div class="flex justify-between items-start mb-3">
+						<h3 class="font-semibold text-lg">即梦AI（创作入口）</h3>
+						<span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">60次/天</span>
+					</div>
+					<p class="text-gray-500 text-sm mb-3">直接进入即梦AI创作界面</p>
+					<div class="flex items-center text-primary text-sm">
+						<span>访问网站</span>
+						<i class="fa fa-arrow-right ml-2"></i>
+					</div>
+				</a>
+
+				<a href="https://console.volcengine.com" title="https://console.volcengine.com" target="_blank"
+					class="bg-white rounded-xl shadow p-5 card-hover">
+					<div class="flex justify-between items-start mb-3">
+						<h3 class="font-semibold text-lg">即梦AI（火山引擎控制台）</h3>
+						<span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">60次/天</span>
+					</div>
+					<p class="text-gray-500 text-sm mb-3">通过火山引擎控制台访问</p>
+					<div class="flex items-center text-primary text-sm">
+						<span>访问网站</span>
+						<i class="fa fa-arrow-right ml-2"></i>
+					</div>
+				</a>
+			</div>
+		</section>
+
+		<!-- 阿里系 -->
+		<section class="mb-12">
+			<div class="flex items-center mb-6">
+				<div class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center mr-3">
+					<i class="fa fa-shopping-bag text-white"></i>
+				</div>
+				<h2 class="text-xl font-bold text-dark">阿里系</h2>
+			</div>
+
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+				<a href="https://tongyi.aliyun.com/wanxiang" title="https://tongyi.aliyun.com/wanxiang" target="_blank"
+					class="bg-white rounded-xl shadow p-5 card-hover">
+					<div class="flex justify-between items-start mb-3">
+						<h3 class="font-semibold text-lg">通义万相（主站）</h3>
+						<span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">50次/天</span>
+					</div>
+					<p class="text-gray-500 text-sm mb-3">阿里巴巴旗下AI图像生成平台</p>
+					<div class="flex items-center text-primary text-sm">
+						<span>访问网站</span>
+						<i class="fa fa-arrow-right ml-2"></i>
+					</div>
+				</a>
+
+				<a href="https://tongyi.aliyun.com/wanxiang/videoCreation"
+					title="https://tongyi.aliyun.com/wanxiang/videoCreation" target="_blank"
+					class="bg-white rounded-xl shadow p-5 card-hover">
+					<div class="flex justify-between items-start mb-3">
+						<h3 class="font-semibold text-lg">通义万相（视频生成）</h3>
+						<span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">50次/天</span>
+					</div>
+					<p class="text-gray-500 text-sm mb-3">专注于视频生成的功能入口</p>
+					<div class="flex items-center text-primary text-sm">
+						<span>访问网站</span>
+						<i class="fa fa-arrow-right ml-2"></i>
+					</div>
+				</a>
+
+				<a href="https://wanxiang.aliyun.com" title="https://wanxiang.aliyun.com" target="_blank"
+					class="bg-white rounded-xl shadow p-5 card-hover">
+					<div class="flex justify-between items-start mb-3">
+						<h3 class="font-semibold text-lg">通义万相（国际站）</h3>
+						<span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">50次/天</span>
+					</div>
+					<p class="text-gray-500 text-sm mb-3">通义万相的国际版本</p>
+					<div class="flex items-center text-primary text-sm">
+						<span>访问网站</span>
+						<i class="fa fa-arrow-right ml-2"></i>
+					</div>
+				</a>
+			</div>
+		</section>
+
+		<!-- 腾讯系 -->
+		<section class="mb-12">
+			<div class="flex items-center mb-6">
+				<div class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center mr-3">
+					<i class="fa fa-qq text-white"></i>
+				</div>
+				<h2 class="text-xl font-bold text-dark">腾讯系</h2>
+			</div>
+
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+				<a href="https://hunyuan.tencent.com" title="https://hunyuan.tencent.com" target="_blank"
+					class="bg-white rounded-xl shadow p-5 card-hover">
+					<div class="flex justify-between items-start mb-3">
+						<h3 class="font-semibold text-lg">腾讯混元图像（主站）</h3>
+						<span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">免费无限</span>
+					</div>
+					<p class="text-gray-500 text-sm mb-3">腾讯混元大模型的图像生成功能</p>
+					<div class="flex items-center text-primary text-sm">
+						<span>访问网站</span>
+						<i class="fa fa-arrow-right ml-2"></i>
+					</div>
+				</a>
+
+				<a href="https://3d.hunyuan.tencent.com" title="https://3d.hunyuan.tencent.com" target="_blank"
+					class="bg-white rounded-xl shadow p-5 card-hover">
+					<div class="flex justify-between items-start mb-3">
+						<h3 class="font-semibold text-lg">腾讯混元图像（3D创作）</h3>
+						<span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">免费无限</span>
+					</div>
+					<p class="text-gray-500 text-sm mb-3">专注于3D模型生成的功能</p>
+					<div class="flex items-center text-primary text-sm">
+						<span>访问网站</span>
+						<i class="fa fa-arrow-right ml-2"></i>
+					</div>
+				</a>
+
+				<a href="https://hunyuan.tencent.com/modelsquare/home/play?modelid=286"
+					title="https://hunyuan.tencent.com/modelsquare/home/play?modelid=286" target="_blank"
+					class="bg-white rounded-xl shadow p-5 card-hover">
+					<div class="flex justify-between items-start mb-3">
+						<h3 class="font-semibold text-lg">腾讯混元图像（模型广场）</h3>
+						<span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">免费无限</span>
+					</div>
+					<p class="text-gray-500 text-sm mb-3">混元模型的模型广场入口</p>
+					<div class="flex items-center text-primary text-sm">
+						<span>访问网站</span>
+						<i class="fa fa-arrow-right ml-2"></i>
+					</div>
+				</a>
+			</div>
+		</section>
+
+		<!-- 百度系 -->
+		<section class="mb-12">
+			<div class="flex items-center mb-6">
+				<div class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center mr-3">
+					<i class="fa fa-search text-white"></i>
+				</div>
+				<h2 class="text-xl font-bold text-dark">百度系</h2>
+			</div>
+
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+				<a href="https://yige.baidu.com" title="https://yige.baidu.com" target="_blank"
+					class="bg-white rounded-xl shadow p-5 card-hover">
+					<div class="flex justify-between items-start mb-3">
+						<h3 class="font-semibold text-lg">文心一格（主站）</h3>
+						<span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">200电量</span>
+					</div>
+					<p class="text-gray-500 text-sm mb-3">百度文心大模型旗下绘画平台</p>
+					<div class="flex items-center text-primary text-sm">
+						<span>访问网站</span>
+						<i class="fa fa-arrow-right ml-2"></i>
+					</div>
+				</a>
+
+				<a href="https://yige.baidu.com/creation" title="https://yige.baidu.com/creation" target="_blank"
+					class="bg-white rounded-xl shadow p-5 card-hover">
+					<div class="flex justify-between items-start mb-3">
+						<h3 class="font-semibold text-lg">文心一格（创作入口）</h3>
+						<span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">200电量</span>
+					</div>
+					<p class="text-gray-500 text-sm mb-3">直接进入创作界面</p>
+					<div class="flex items-center text-primary text-sm">
+						<span>访问网站</span>
+						<i class="fa fa-arrow-right ml-2"></i>
+					</div>
+				</a>
+
+				<a href="https://wenxin.baidu.com/moduleApi/ernieVilg"
+					title="https://wenxin.baidu.com/moduleApi/ernieVilg" target="_blank"
+					class="bg-white rounded-xl shadow p-5 card-hover">
+					<div class="flex justify-between items-start mb-3">
+						<h3 class="font-semibold text-lg">文心一格（微信试用）</h3>
+						<span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">200电量</span>
+					</div>
+					<p class="text-gray-500 text-sm mb-3">适合微信环境的试用入口</p>
+					<div class="flex items-center text-primary text-sm">
+						<span>访问网站</span>
+						<i class="fa fa-arrow-right ml-2"></i>
+					</div>
+				</a>
+			</div>
+		</section>
+
+		<!-- 快手系 -->
+		<section class="mb-12">
+			<div class="flex items-center mb-6">
+				<div class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center mr-3">
+					<i class="fa fa-video-camera text-white"></i>
+				</div>
+				<h2 class="text-xl font-bold text-dark">快手系</h2>
+			</div>
+
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+				<a href="https://klingai.kuaishou.com" title="https://klingai.kuaishou.com" target="_blank"
+					class="bg-white rounded-xl shadow p-5 card-hover">
+					<div class="flex justify-between items-start mb-3">
+						<h3 class="font-semibold text-lg">可灵AI（主站）</h3>
+						<span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">基础免费</span>
+					</div>
+					<p class="text-gray-500 text-sm mb-3">快手旗下AI绘画平台</p>
+					<div class="flex items-center text-primary text-sm">
+						<span>访问网站</span>
+						<i class="fa fa-arrow-right ml-2"></i>
+					</div>
+				</a>
+			</div>
+		</section>
+
+		<!-- 其他免费平台 -->
+		<section class="mb-12">
+			<div class="flex items-center mb-6">
+				<div class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center mr-3">
+					<i class="fa fa-th text-white"></i>
+				</div>
+				<h2 class="text-xl font-bold text-dark">其他免费平台</h2>
+			</div>
+
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+				<a href="https://6pen.art" title="https://6pen.art" target="_blank"
+					class="bg-white rounded-xl shadow p-5 card-hover">
+					<div class="flex justify-between items-start mb-3">
+						<h3 class="font-semibold text-lg">6pen Art</h3>
+						<span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">部分免费</span>
+					</div>
+					<p class="text-gray-500 text-sm mb-3">老牌AI绘画平台</p>
+					<div class="flex items-center text-primary text-sm">
+						<span>访问网站</span>
+						<i class="fa fa-arrow-right ml-2"></i>
+					</div>
+				</a>
+
+				<a href="https://dreamina.jianying.com/s/iFQhyUSm" title="https://dreamina.jianying.com/s/iFQhyUSm"
+					target="_blank" class="bg-white rounded-xl shadow p-5 card-hover">
+					<div class="flex justify-between items-start mb-3">
+						<h3 class="font-semibold text-lg">Dreamina</h3>
+						<span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">免费无限</span>
+					</div>
+					<p class="text-gray-500 text-sm mb-3">即梦极简版，操作简单</p>
+					<div class="flex items-center text-primary text-sm">
+						<span>访问网站</span>
+						<i class="fa fa-arrow-right ml-2"></i>
+					</div>
+				</a>
+
+				<a href="https://www.qiyuai.net" title="https://www.qiyuai.net" target="_blank"
+					class="bg-white rounded-xl shadow p-5 card-hover">
+					<div class="flex justify-between items-start mb-3">
+						<h3 class="font-semibold text-lg">奇域AI</h3>
+						<span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">100次/天</span>
+					</div>
+					<p class="text-gray-500 text-sm mb-3">功能丰富的AI创作平台</p>
+					<div class="flex items-center text-primary text-sm">
+						<span>访问网站</span>
+						<i class="fa fa-arrow-right ml-2"></i>
+					</div>
+				</a>
+
+				<a href="https://miaohua.sensetime.com" title="https://miaohua.sensetime.com" target="_blank"
+					class="bg-white rounded-xl shadow p-5 card-hover">
+					<div class="flex justify-between items-start mb-3">
+						<h3 class="font-semibold text-lg">商汤秒画</h3>
+						<span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">免费无限</span>
+					</div>
+					<p class="text-gray-500 text-sm mb-3">商汤科技旗下AI绘画工具</p>
+					<div class="flex items-center text-primary text-sm">
+						<span>访问网站</span>
+						<i class="fa fa-arrow-right ml-2"></i>
+					</div>
+				</a>
+
+				<a href="https://chatglm.cn" title="https://chatglm.cn" target="_blank"
+					class="bg-white rounded-xl shadow p-5 card-hover">
+					<div class="flex justify-between items-start mb-3">
+						<h3 class="font-semibold text-lg">智谱AI（清言）</h3>
+						<span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">免费无限</span>
+					</div>
+					<p class="text-gray-500 text-sm mb-3">左侧选择"AI绘画"功能</p>
+					<div class="flex items-center text-primary text-sm">
+						<span>访问网站</span>
+						<i class="fa fa-arrow-right ml-2"></i>
+					</div>
+				</a>
+
+				<a href="https://www.vegaai.net" title="https://www.vegaai.net" target="_blank"
+					class="bg-white rounded-xl shadow p-5 card-hover">
+					<div class="flex justify-between items-start mb-3">
+						<h3 class="font-semibold text-lg">Vega AI</h3>
+						<span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">免费无限</span>
+					</div>
+					<p class="text-gray-500 text-sm mb-3">功能全面的AI创作平台</p>
+					<div class="flex items-center text-primary text-sm">
+						<span>访问网站</span>
+						<i class="fa fa-arrow-right ml-2"></i>
+					</div>
+				</a>
+
+				<a href="https://tusiart.com" title="https://tusiart.com" target="_blank"
+					class="bg-white rounded-xl shadow p-5 card-hover">
+					<div class="flex justify-between items-start mb-3">
+						<h3 class="font-semibold text-lg">吐司TusiArt</h3>
+						<span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">基础免费</span>
+					</div>
+					<p class="text-gray-500 text-sm mb-3">特色AI绘画平台</p>
+					<div class="flex items-center text-primary text-sm">
+						<span>访问网站</span>
+						<i class="fa fa-arrow-right ml-2"></i>
+					</div>
+				</a>
+
+				<a href="https://www.whee.com" title="https://www.whee.com" target="_blank"
+					class="bg-white rounded-xl shadow p-5 card-hover">
+					<div class="flex justify-between items-start mb-3">
+						<h3 class="font-semibold text-lg">WHEE</h3>
+						<span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">基础免费</span>
+					</div>
+					<p class="text-gray-500 text-sm mb-3">AI创意设计平台</p>
+					<div class="flex items-center text-primary text-sm">
+						<span>访问网站</span>
+						<i class="fa fa-arrow-right ml-2"></i>
+					</div>
+				</a>
+
+				<a href="https://www.liblib.art" title="https://www.liblib.art" target="_blank"
+					class="bg-white rounded-xl shadow p-5 card-hover">
+					<div class="flex justify-between items-start mb-3">
+						<h3 class="font-semibold text-lg">哩布哩布AI</h3>
+						<span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">基础免费</span>
+					</div>
+					<p class="text-gray-500 text-sm mb-3">AI绘画资源社区</p>
+					<div class="flex items-center text-primary text-sm">
+						<span>访问网站</span>
+						<i class="fa fa-arrow-right ml-2"></i>
+					</div>
+				</a>
+
+				<a href="https://www.huayuzhou.com" title="https://www.huayuzhou.com" target="_blank"
+					class="bg-white rounded-xl shadow p-5 card-hover">
+					<div class="flex justify-between items-start mb-3">
+						<h3 class="font-semibold text-lg">画宇宙</h3>
+						<span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">基础免费</span>
+					</div>
+					<p class="text-gray-500 text-sm mb-3">专业AI绘画工具</p>
+					<div class="flex items-center text-primary text-sm">
+						<span>访问网站</span>
+						<i class="fa fa-arrow-right ml-2"></i>
+					</div>
+				</a>
+
+				<a href="https://www.wujieai.com" title="https://www.wujieai.com" target="_blank"
+					class="bg-white rounded-xl shadow p-5 card-hover">
+					<div class="flex justify-between items-start mb-3">
+						<h3 class="font-semibold text-lg">无界版图</h3>
+						<span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">15次/天</span>
+					</div>
+					<p class="text-gray-500 text-sm mb-3">AI绘画与版权服务平台</p>
+					<div class="flex items-center text-primary text-sm">
+						<span>访问网站</span>
+						<i class="fa fa-arrow-right ml-2"></i>
+					</div>
+				</a>
+
+				<a href="https://printidea.art" title="https://printidea.art" target="_blank"
+					class="bg-white rounded-xl shadow p-5 card-hover">
+					<div class="flex justify-between items-start mb-3">
+						<h3 class="font-semibold text-lg">盗梦师</h3>
+						<span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">5次/天</span>
+					</div>
+					<p class="text-gray-500 text-sm mb-3">特色AI创意平台</p>
+					<div class="flex items-center text-primary text-sm">
+						<span>访问网站</span>
+						<i class="fa fa-arrow-right ml-2"></i>
+					</div>
+				</a>
+			</div>
+		</section>
+	</main>
+
+	<!-- 页脚 -->
+	<footer class="bg-dark text-white py-8">
+		<div class="container mx-auto px-4">
+			<div class="flex flex-col md:flex-row justify-between items-center">
+				<div class="mb-4 md:mb-0">
+					<div class="flex items-center">
+						<i class="fa fa-paint-brush text-2xl mr-3 text-primary"></i>
+						<h2 class="text-xl font-bold">AI绘画平台导航</h2>
+					</div>
+					<p class="text-gray-400 text-sm mt-2">精选国内优质AI绘画工具，助力创意创作</p>
+				</div>
+
+				<div class="flex space-x-6">
+					<a href="#" class="text-gray-400 hover:text-white transition-colors">
+						<i class="fa fa-github text-xl"></i>
+					</a>
+					<a href="#" class="text-gray-400 hover:text-white transition-colors">
+						<i class="fa fa-twitter text-xl"></i>
+					</a>
+					<a href="#" class="text-gray-400 hover:text-white transition-colors">
+						<i class="fa fa-weixin text-xl"></i>
+					</a>
+				</div>
+			</div>
+
+			<div class="border-t border-gray-700 mt-6 pt-6 text-center text-gray-400 text-sm">
+				<p>© 2025 AI绘画平台导航 | 所有链接均指向官方网站</p>
+			</div>
+		</div>
+	</footer>
+
+	<!-- JavaScript -->
+	<script>
+		// 搜索功能实现
+		document.getElementById('search-input').addEventListener('input', function (e) {
+			const searchTerm = e.target.value.toLowerCase();
+			const cards = document.querySelectorAll('a[target="_blank"]');
+
+			cards.forEach(card => {
+				const title = card.querySelector('h3').textContent.toLowerCase();
+				const description = card.querySelector('p').textContent.toLowerCase();
+
+				if (title.includes(searchTerm) || description.includes(searchTerm)) {
+					card.style.display = 'block';
+				} else {
+					card.style.display = 'none';
+				}
+			});
+		});
+
+		// 平滑滚动
+		document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+			anchor.addEventListener('click', function (e) {
+				e.preventDefault();
+				document.querySelector(this.getAttribute('href')).scrollIntoView({
+					behavior: 'smooth'
+				});
+			});
+		});
+	</script>
+</body>
+
+</html>

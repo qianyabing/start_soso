@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>start_soso</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/16/599/599305.png" type="image/png">
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./search_index.css">
+    <style>
+        body {
+            background: url("https://picsum.photos/1920/1080") no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 120px;
+            position: relative;
+        }
+    </style>
+</head>
+
+<body>
+    
+
+    <!-- <div class="nav">
+        <div class="nav-item active">搜索</div>
+        <div class="nav-item">影视</div>
+        <div class="nav-item">音频</div>
+        <div class="nav-item">社区</div>
+        <div class="nav-item">购物</div>
+        <div class="nav-item">生活</div>
+    </div> -->
+
+    <div class="search-container">
+        <input type="text" id="search-input" placeholder="输入搜索内容，按回车即可搜索">
+        <button id="search-btn"></button>
+        <div class="engine-select">
+            <div class="engine-item active" data-engine="sogou">搜狗</div>
+            <div class="engine-item" data-engine="baidu">百度</div>
+            <div class="engine-item" data-engine="bing">Bing</div>
+            <div class="engine-item" data-engine="google">Google</div>
+            <div class="engine-item" data-engine="yandex">Yandex</div>
+            <div class="engine-item" data-engine="360">360</div>
+            <div class="engine-item" data-engine="weixin">微信</div>
+            <div class="engine-item" data-engine="zhihu">知乎</div>
+            <div class="engine-item" data-engine="xiaohongshu">小红书</div>
+            <div class="engine-item" data-engine="bilibili">B站</div>
+        </div>
+    </div>
+
+    <div class="common-sites">
+        <div class="sites-header">
+            <div class="sites-title">常用网址</div>
+            <button class="add-site-btn">
+                <i class="fas fa-plus"></i>
+                <span>添加网址</span>
+            </button>
+        </div>
+        <div class="sites-list" id="sitesList"></div>
+        <div class="sites-empty" id="sitesEmpty">
+            <i class="fas fa-link"></i>
+            <p>暂无常用网址，点击添加按钮开始添加吧</p>
+        </div>
+    </div>
+
+    <div class="modal-mask" id="siteModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <span>添加常用网址</span>
+                <button class="modal-close" id="modalClose">×</button>
+            </div>
+            <form class="modal-form" id="siteForm">
+                <label for="siteName">网站名称</label>
+                <input type="text" id="siteName" placeholder="例如：百度" required>
+                <label for="siteLink">网站链接</label>
+                <input type="url" id="siteLink" placeholder="https://www.baidu.com" required>
+            </form>
+            <div class="modal-btns">
+                <button class="modal-cancel" id="modalCancel">取消</button>
+                <button class="modal-confirm" id="modalConfirm">确认添加</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="./search_index.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,79 @@
+:root {
+    --bg-color: #0d94ff;
+    --bg-hover-color: #6bb9f8;
+    --list-left: 100px;
+    --list-top: 160px;
+}
+
+/* 🔵 可拖拽图标样式 */
+.draggable-icon {
+    position: absolute;
+    top: var(--list-top);
+    left: var(--list-left);
+    /* 绝对定位，允许自由移动 */
+    width: 48px;
+    height: 48px;
+    /* background: var(--bg-color); */
+    /* 图标配色 */
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    /* 鼠标悬浮为「移动」光标 */
+    user-select: none;
+    /* 拖拽时禁止选中文字 */
+    border-radius: 8px;
+}
+
+/* 图标内容（可用文字/图片/字体图标，这里用字符示例） */
+/* .draggable-icon::before {
+    content: "☰";
+    font-size: 20px;
+} */
+
+/* 🔵 网站列表样式（默认隐藏，跟随图标下方） */
+.site-list {
+    color: #fff;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background: var(--bg-color);
+    position: absolute;
+    top: calc(var(--list-top) + 48px);
+    /* 图标底部对齐 */
+    left: var(--list-left);
+    /* 初始与图标同左 */
+    width: 200px;
+    display: none;
+    padding: 0.5rem 0;
+    border-radius: 8px;
+    border: 1px solid #0d94ff;
+}
+
+.site-list li {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+.site-list a {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+}
+
+.site-list li:hover {
+    background: var(--bg-hover-color);
+}
+
+.site-list.show {
+    display: block;
+    /* JS 控制显示 */
+}
+
+/* 🔵 主体内容（防止被图标/列表遮挡） */
+.content {
+    margin-top: 60px;
+    /* 预留图标+列表高度 */
+    padding: 1rem;
+}
