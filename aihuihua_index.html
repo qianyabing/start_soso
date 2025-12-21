@@ -9,7 +9,6 @@
 	<script src="https://cdn.tailwindcss.com"></script>
 	<!-- 引入Font Awesome图标 -->
 	<link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-	<link rel="stylesheet" href="./draggable-icon.css">
 
 	<!-- 配置Tailwind自定义主题 -->
 	<script>
@@ -48,15 +47,6 @@
 </head>
 
 <body class="bg-gray-50 text-gray-800 min-h-screen">
-	<!-- 🔹 可拖拽的图标容器 -->
-	<div class="draggable-icon" id="draggableIcon"></div>
-	<!-- 🔹 网站切换列表 -->
-	<ul class="site-list" id="siteList">
-		<li><a href="./index.html" data-target="self">start_soso</a></li>
-        <li><a href="./aihuihua_index.html" data-target="other">AI_generate</a></li>
-	</ul>
-	<!-- 每个网站复制上面这7行 -->
-
 	<!-- 顶部导航栏 -->
 	<header class="gradient-bg shadow-md sticky top-0 z-50">
 		<div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center">
@@ -609,7 +599,6 @@
 			});
 		});
 	</script>
-    <script src="./draggable-icon.js"></script>;
 </body>
 
 </html>

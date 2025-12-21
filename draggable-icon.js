@@ -29,7 +29,7 @@ document.addEventListener('mousemove', (e) => {
     // 列表始终跟随图标下方（left 与图标一致，top 为图标底部）
     const siteList = document.getElementById('siteList');
     siteList.style.left = `${x}px`;
-    siteList.style.top = `${y + draggableIcon.offsetHeight}px`;
+    siteList.style.top = `${y + draggableIcon.offsetHeight +2}px`;
 });
 
 // 鼠标松开：结束拖拽

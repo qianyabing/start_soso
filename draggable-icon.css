@@ -1,17 +1,19 @@
 :root {
     --bg-color: #0d94ff;
     --bg-hover-color: #6bb9f8;
+    --list-left: 100px;
+    --list-top: 160px;
 }
 
 /* 🔵 可拖拽图标样式 */
 .draggable-icon {
     position: absolute;
-    top: 200px;
-    left: 40px;
+    top: var(--list-top);
+    left: var(--list-left);
     /* 绝对定位，允许自由移动 */
-    width: 40px;
-    height: 40px;
-    background: var(--bg-color);
+    width: 48px;
+    height: 48px;
+    /* background: var(--bg-color); */
     /* 图标配色 */
     color: #fff;
     display: flex;
@@ -25,26 +27,28 @@
 }
 
 /* 图标内容（可用文字/图片/字体图标，这里用字符示例） */
-.draggable-icon::before {
+/* .draggable-icon::before {
     content: "☰";
     font-size: 20px;
-}
+} */
 
 /* 🔵 网站列表样式（默认隐藏，跟随图标下方） */
 .site-list {
+    color: #fff;
     list-style: none;
     margin: 0;
     padding: 0;
     background: var(--bg-color);
     position: absolute;
-    top: 240px;
+    top: calc(var(--list-top) + 48px);
     /* 图标底部对齐 */
-    left: 40px;
+    left: var(--list-left);
     /* 初始与图标同左 */
     width: 200px;
     display: none;
     padding: 0.5rem 0;
     border-radius: 8px;
+    border: 1px solid #0d94ff;
 }
 
 .site-list li {
