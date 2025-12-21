@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>计算日期</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            padding: 2.5rem;
+        }
+
+        h1 {
+            color: #2d3436;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            font-weight: 600;
+            font-size: 2.2rem;
+        }
+
+        .input-group {
+            margin-bottom: 2rem;
+        }
+
+        label {
+            display: block;
+            color: #636e72;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .date-picker {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        input[type="date"],
+        input[type="number"] {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        input[type="date"]:focus,
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #a29bfe;
+            box-shadow: 0 0 0 3px rgba(162, 155, 254, 0.15);
+        }
+
+        .date-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        .date-tag {
+            padding: 0.6rem 1.2rem;
+            background: #f0f2f5;
+            border-radius: 20px;
+            color: #2d3436;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .date-tag:hover {
+            background: #a29bfe;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(162, 155, 254, 0.2);
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1.5rem;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(108, 92, 231, 0.25);
+        }
+
+        .result-card {
+            margin-top: 2.5rem;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 16px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .result-item {
+            margin-bottom: 1.2rem;
+            font-size: 1.1rem;
+            color: #2d3436;
+        }
+
+        .result-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .highlight {
+            color: #6c5ce7;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>📅 智能日期计算工具</h1>
+
+        <div class="input-group">
+            <label for="baseDate">选择基准日期：</label>
+            <div class="date-picker">
+                <input type="date" id="baseDate" value="">
+                <div class="date-tags" id="dateTags"></div>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label for="daysLater">输入天数（正数为未来，负数为过去）：</label>
+            <input type="number" id="daysLater" placeholder="例如：30 或 -15" value="0">
+        </div>
+
+        <button class="calculate-btn" onclick="calculate()">立即计算</button>
+
+        <div class="result-card" id="resultCard" style="display: none;">
+            <div class="result-item">
+                基准日期：<span class="highlight" id="baseDateDisplay"></span>
+            </div>
+            <div class="result-item">
+                计算后日期：<span class="highlight" id="targetDateDisplay"></span>
+            </div>
+            <div class="result-item">
+                距离今天：<span class="highlight" id="daysDiffDisplay"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 预设日期列表
+        const presetDates = [
+            '2020-10-15',
+            '2020-10-25',
+            '2023-05-02',
+            '2023-10-27',
+            '2023-12-05'
+        ];
+
+        // 初始化页面时设置默认日期为今天
+        window.onload = function () {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('baseDate').value = today;
+            renderDateTags();
+        };
+
+        // 渲染预设日期标签
+        function renderDateTags() {
+            const container = document.getElementById('dateTags');
+            presetDates.forEach(date => {
+                const tag = document.createElement('div');
+                tag.className = 'date-tag';
+                tag.textContent = date;
+                tag.onclick = () => {
+                    document.getElementById('baseDate').value = date;
+                };
+                container.appendChild(tag);
+            });
+        }
+
+        // 核心计算函数
+        function calculate() {
+            const baseDateInput = document.getElementById('baseDate').value;
+            const daysLaterInput = parseInt(document.getElementById('daysLater').value);
+
+            if (!baseDateInput || isNaN(daysLaterInput)) {
+                alert('请输入有效的日期和天数！');
+                return;
+            }
+
+            const baseDate = new Date(baseDateInput);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // 重置时间部分确保计算准确
+
+            // 计算目标日期
+            const targetDate = new Date(baseDate);
+            targetDate.setDate(baseDate.getDate() + daysLaterInput);
+
+            // 计算距离今天的天数差
+            const timeDiff = today.getTime() - baseDate.getTime();
+            const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+            // 显示结果
+            document.getElementById('baseDateDisplay').textContent = baseDate.toLocaleDateString('zh-CN');
+            document.getElementById('targetDateDisplay').textContent = targetDate.toLocaleDateString('zh-CN');
+            document.getElementById('daysDiffDisplay').textContent =
+                `${daysDiff > 0 ? '已经过去' : daysDiff < 0 ? '还有' : '就是'}${Math.abs(daysDiff)}天`;
+
+            document.getElementById('resultCard').style.display = 'block';
+        }
+    </script>
+</body>
+
+</html>

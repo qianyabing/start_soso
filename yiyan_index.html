@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="zh" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>✨ 一言 · 分类版</title>
+    <style>
+        :root {
+            --bg: #f8f9fa;
+            --card-bg: white;
+            --text: #333;
+            --border: #4a90e2;
+            --accent: #007bff;
+            --success: #5cb85c;
+            --danger: #d9534f;
+            --warning: #f0ad4e;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --radius: 16px;
+            --transition: all 0.3s ease;
+            --font: "Segoe UI", "Microsoft YaHei", sans-serif;
+        }
+
+        [data-theme="dark"] {
+            --bg: #1a1a1a;
+            --card-bg: #252525;
+            --text: #e0e0e0;
+            --border: #5caeff;
+            --accent: #5caeff;
+            --success: #5cb85c;
+            --danger: #e74c3c;
+            --warning: #e0a500;
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            transition: var(--transition);
+        }
+
+        body {
+            font-family: var(--font);
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--bg) 0%, #e4edf5 100%);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin: 0 0 8px;
+            font-weight: 500;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            color: var(--accent);
+        }
+
+        /* 语录卡片 */
+        .quote-card {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 30px var(--shadow);
+            text-align: center;
+            color: var(--text);
+            line-height: 1.7;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border: 1px solid rgba(74, 144, 226, 0.2);
+        }
+
+        .quote-content {
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .quote-source {
+            font-size: 14px;
+            color: #888;
+            margin-top: 12px;
+        }
+
+        [data-theme="dark"] .quote-source {
+            color: #aaa;
+        }
+
+        /* 分类按钮组 */
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 16px;
+            font-size: 14px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: var(--font);
+        }
+
+        button[data-cat] {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* 操作按钮 */
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        button#refresh {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        button#copy {
+            background-color: var(--success);
+            color: white;
+        }
+
+        button#save {
+            background-color: var(--warning);
+            color: #333;
+        }
+
+        button#clear {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        button#toggle-favorites {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        /* 收藏面板 */
+        .favorites-panel {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 16px;
+            box-shadow: 0 4px 15px var(--shadow);
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+            border: 1px solid rgba(74, 144, 226, 0.2);
+        }
+
+        .favorites-panel h3 {
+            margin: 0 0 12px;
+            font-size: 18px;
+            color: var(--accent);
+        }
+
+        .favorite-item {
+            padding: 10px;
+            margin-bottom: 8px;
+            background: rgba(74, 144, 226, 0.1);
+            border-radius: 6px;
+            font-size: 15px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .empty {
+            color: #aaa;
+            font-style: italic;
+            text-align: center;
+        }
+
+        .tip {
+            text-align: center;
+            font-size: 14px;
+            color: #888;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <h1>✨ 一言 · 分类版</h1>
+            <button class="theme-toggle" id="themeToggle">🌙 暗黑模式</button>
+        </header>
+
+        <!-- 语录展示 -->
+        <div class="quote-card">
+            <p class="quote-content" id="quote">点击下方分类，获取一句打动人心的话……</p>
+            <p class="quote-source" id="source"></p>
+        </div>
+
+        <!-- 分类按钮 -->
+        <div class="buttons">
+            <button data-cat="a">🎮 动画</button>
+            <button data-cat="b">🖼️ 漫画</button>
+            <button data-cat="c">🕹️ 游戏</button>
+            <button data-cat="d">📖 文学</button>
+            <button data-cat="e">✍️ 原创</button>
+            <button data-cat="f">🌐 网络</button>
+            <button data-cat="g">🔧 其他</button>
+            <button data-cat="h">🎬 影视</button>
+            <button data-cat="i">📚 诗词</button>
+            <button data-cat="j">🎵 网易云</button>
+            <button data-cat="k">🧠 哲理</button>
+            <button data-cat="l">😄 抖机灵</button>
+            <button data-cat="all">🎲 随机</button>
+        </div>
+
+        <!-- 操作按钮 -->
+        <div class="actions">
+            <button id="refresh">🔄 换一句</button>
+            <button id="copy">📋 复制</button>
+            <button id="save">❤️ 收藏</button>
+            <button id="clear">🗑️ 清空</button>
+            <button id="toggle-favorites">⭐ 我的收藏</button>
+        </div>
+
+        <!-- 收藏面板 -->
+        <div class="favorites-panel" id="favoritesPanel">
+            <h3>我的收藏 ❤️</h3>
+            <div id="favoritesList">
+                <p class="empty">还没有收藏哦～</p>
+            </div>
+        </div>
+
+        <p class="tip">
+            基于 <a href="https://developer.hitokoto.cn" target="_blank" style="color:inherit">一言 Hitokoto API</a> 驱动
+        </p>
+    </div>
+
+    <script>
+        const quoteEl = document.getElementById('quote');
+        const sourceEl = document.getElementById('source');
+        const favoritesList = document.getElementById('favoritesList');
+        const favoritesPanel = document.getElementById('favoritesPanel');
+        let currentCat = 'i'; // 默认诗词
+        let currentText = '';
+        let favorites = JSON.parse(localStorage.getItem('quotes-favorites')) || [];
+        const themeToggle = document.getElementById('themeToggle');
+
+        // 类型名称映射
+        const typeNames = {
+            a: '动画', b: '漫画', c: '游戏', d: '文学', e: '原创',
+            f: '网络', g: '其他', h: '影视', i: '诗词', j: '网易云', k: '哲理', l: '抖机灵'
+        };
+
+        // 获取一条语录
+        async function fetchQuote(cat) {
+            quoteEl.textContent = '加载中...';
+            sourceEl.textContent = '';
+            try {
+                let url;
+                if (cat === 'all') {
+                    const cats = 'abcdefghijkl';
+                    const randomCat = cats[Math.floor(Math.random() * cats.length)];
+                    url = `https://v1.hitokoto.cn?c=${randomCat}`;
+                } else {
+                    url = `https://v1.hitokoto.cn?c=${cat}`;
+                }
+
+                const res = await fetch(url);
+                const data = await res.json();
+                const typeName = typeNames[data.type] || '未知';
+                const text = `${data.hitokoto} —— ${data.from || '未知来源'}`;
+
+                quoteEl.innerHTML = `<strong>${data.hitokoto}</strong>`;
+                sourceEl.textContent = `—— ${data.from || '未知来源'} [${typeName}]`;
+                currentText = text;
+                currentCat = cat;
+            } catch (err) {
+                quoteEl.textContent = '获取失败，请检查网络';
+                sourceEl.textContent = '点击“换一句”重试';
+                console.error('API Error:', err);
+            }
+        }
+
+        // 收藏
+        document.getElementById('save').addEventListener('click', function () {
+            if (!currentText) return alert('还没有内容可以收藏');
+            if (favorites.includes(currentText)) {
+                return alert('这句已经收藏过了！');
+            }
+            favorites.push(currentText);
+            localStorage.setItem('quotes-favorites', JSON.stringify(favorites));
+            renderFavorites();
+            this.textContent = '✅ 已收藏！';
+            setTimeout(() => { this.textContent = '❤️ 收藏'; }, 1500);
+        });
+
+        // 渲染收藏
+        function renderFavorites() {
+            if (favorites.length === 0) {
+                favoritesList.innerHTML = '<p class="empty">还没有收藏哦～</p>';
+                return;
+            }
+            favoritesList.innerHTML = '';
+            favorites.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'favorite-item';
+                div.innerText = item;
+                favoritesList.appendChild(div);
+            });
+        }
+
+        // 切换收藏面板
+        document.getElementById('toggle-favorites').addEventListener('click', () => {
+            const isHidden = favoritesPanel.style.display === 'none';
+            favoritesPanel.style.display = isHidden ? 'block' : 'none';
+            this.textContent = isHidden ? '❌ 收起收藏' : '⭐ 我的收藏';
+        });
+
+        // 复制
+        document.getElementById('copy').addEventListener('click', function () {
+            if (!currentText) return alert('没有内容可复制');
+            navigator.clipboard?.writeText(currentText)
+                .then(() => {
+                    this.textContent = '✅ 已复制！';
+                    setTimeout(() => { this.textContent = '📋 复制'; }, 1500);
+                })
+                .catch(() => {
+                    prompt('复制成功！请手动复制：', currentText);
+                });
+        });
+
+        // 清空
+        document.getElementById('clear').addEventListener('click', () => {
+            quoteEl.textContent = '已清空';
+            sourceEl.textContent = '';
+            currentText = '';
+        });
+
+        // 换一句（当前分类）
+        document.getElementById('refresh').addEventListener('click', () => {
+            fetchQuote(currentCat);
+        });
+
+        // 绑定分类按钮
+        document.querySelectorAll('button[data-cat]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const cat = btn.getAttribute('data-cat');
+                fetchQuote(cat);
+            });
+        });
+
+        // 主题切换
+        themeToggle.addEventListener('click', () => {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            themeToggle.textContent = isDark ? '☀️ 白天模式' : '🌙 暗黑模式';
+        });
+
+        // 初始化
+        renderFavorites();
+        fetchQuote('i'); // 默认加载诗词
+    </script>
+</body>
+
+</html>
